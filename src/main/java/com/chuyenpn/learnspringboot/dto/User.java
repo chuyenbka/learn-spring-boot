@@ -1,6 +1,9 @@
 package com.chuyenpn.learnspringboot.dto;
 
+import javax.validation.constraints.Size;
+
 public class User {
+	@Size(min=5)
 	private String name;
 	private String userName;
 	private String passWord;

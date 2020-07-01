@@ -3,9 +3,12 @@ package com.chuyenpn.learnspringboot.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,13 +27,18 @@ public class HelloWorld {
 		return "Hello World";
 	}
 	
+	@RequestMapping("/hello/{id}")
+	public String helloPathVariable(@PathVariable(value="id") String id) {
+		return String.format("Hello World, your id is %s", id);
+	}
+	
 	@RequestMapping("/get-user")
 	public User getUser() {
 		return new User("Nguyen Van A", "ant", "12345678");
 	}
 	
 	@PostMapping("/post-user")
-	public String postUser(@RequestBody User user) {
+	public String postUser(@Valid @RequestBody User user) {
 		return user.toString();
 	}
 	
