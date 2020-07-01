@@ -2,9 +2,12 @@ package com.chuyenpn.learnspringboot.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,26 +25,34 @@ import com.chuyenpn.learnspringboot.exceptions.ValidateException;
 @RestController
 public class HelloWorld {
 
+	@Autowired
+	MessageSource messageSource;
+
 	@RequestMapping("/hello")
 	public String hello() {
 		return "Hello World";
 	}
-	
+
 	@RequestMapping("/hello/{id}")
-	public String helloPathVariable(@PathVariable(value="id") String id) {
+	public String helloPathVariable(@PathVariable(value = "id") String id) {
 		return String.format("Hello World, your id is %s", id);
 	}
 	
+	@RequestMapping("/hello-in-other-language")
+	public String helloInOtherLanguage(Locale locale) {
+		return messageSource.getMessage("hello.message", null, locale);
+	}
+
 	@RequestMapping("/get-user")
 	public User getUser() {
 		return new User("Nguyen Van A", "ant", "12345678");
 	}
-	
+
 	@PostMapping("/post-user")
 	public String postUser(@Valid @RequestBody User user) {
 		return user.toString();
 	}
-	
+
 	@PostMapping("/post-user2")
 	public String postUser2(@RequestBody User user) throws PasswordValidateException {
 		if (user.getPassWord().length() < 8) {
@@ -49,7 +60,7 @@ public class HelloWorld {
 		}
 		return user.toString();
 	}
-	
+
 	@PostMapping("/post-user3")
 	public String postUser3(@RequestBody User user) throws ValidateException {
 		if (user.getUserName().length() < 6) {
@@ -57,12 +68,12 @@ public class HelloWorld {
 		}
 		return user.toString();
 	}
-	
+
 	@ExceptionHandler(PasswordValidateException.class)
 	public ResponseEntity<ErrorResponse> handleException(PasswordValidateException ex) {
 		List<String> details = new ArrayList<>();
-        details.add(ex.getLocalizedMessage());
+		details.add(ex.getLocalizedMessage());
 		ErrorResponse error = new ErrorResponse("Validation errors", details);
-        return new ResponseEntity<ErrorResponse>(error, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<ErrorResponse>(error, HttpStatus.NOT_FOUND);
 	}
 }
