@@ -1,20 +1,25 @@
 package com.chuyenpn.learnspringboot.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chuyenpn.learnspringboot.dto.User;
@@ -39,8 +44,25 @@ public class HelloWorld {
 	}
 	
 	@RequestMapping("/hello-in-other-language")
+	@ResponseStatus(code=HttpStatus.ACCEPTED)
 	public String helloInOtherLanguage(Locale locale) {
 		return messageSource.getMessage("hello.message", null, locale);
+	}
+	
+	@RequestMapping("/hello-with-response-header")
+	public ResponseEntity<String> helloResponseWithHeaer() {
+		HttpHeaders headers = new HttpHeaders();
+	    headers.add("X-Hello", "response entity");
+	         
+	    return new ResponseEntity<>(
+	      "Custom header set", headers, HttpStatus.OK);
+	}
+	
+	@GetMapping("/hello-with-response-header-manual")
+	void manual(HttpServletResponse response) throws IOException {
+	    response.setHeader("Custom-Header", "foo");
+	    response.setStatus(200);
+	    response.getWriter().println("Hello World!");
 	}
 
 	@RequestMapping("/get-user")
