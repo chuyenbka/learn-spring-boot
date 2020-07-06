@@ -58,6 +58,14 @@ public class HelloWorld {
 	      "Custom header set", headers, HttpStatus.OK);
 	}
 	
+	@RequestMapping("/hello-with-response-header2")
+	public ResponseEntity<String> helloResponseWithHeaer2() {
+		HttpHeaders headers = new HttpHeaders();
+	    headers.add("X-Hello", "response entity");
+	    return ResponseEntity.accepted().headers(headers).body("Custom header set");
+	}
+	
+	
 	@GetMapping("/hello-with-response-header-manual")
 	void manual(HttpServletResponse response) throws IOException {
 	    response.setHeader("Custom-Header", "foo");

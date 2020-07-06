@@ -27,6 +27,14 @@ public class GlobalHandleException extends ResponseEntityExceptionHandler {
         return new ResponseEntity<ErrorResponse>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 	
+	@ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> globalException(Exception ex) {
+		List<String> details = new ArrayList<>();
+        details.add(ex.getLocalizedMessage());
+        ErrorResponse errorDetails = new ErrorResponse("errors", details);
+        return new ResponseEntity<ErrorResponse>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+	
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(
 	  MethodArgumentNotValidException ex, 
