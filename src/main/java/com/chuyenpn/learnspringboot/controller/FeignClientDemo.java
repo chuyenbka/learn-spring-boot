@@ -27,7 +27,6 @@ public class FeignClientDemo {
 		return null;
 	}
 	
-	
 	@GetMapping("/feign-client/posts/{id}")
 	public Post getPostById(@PathVariable("id") Long id) {
 		return feignClient.getPostById(id);
